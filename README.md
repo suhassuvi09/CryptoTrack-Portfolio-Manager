@@ -146,7 +146,7 @@ Before you begin, ensure you have the following installed:
 1. **Clone the repository**
    ```bash
    git clone https://github.com/suhassuvi09/CryptoTrack-Portfolio-Manager
-   cd cryptotrack
+   cd CryptoTrack-Portfolio-Manager
    ```
 
 2. **Install server dependencies**
