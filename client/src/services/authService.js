@@ -1,11 +1,8 @@
 import axios from 'axios';
 
-// Get API base URL from environment variable or use default
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: '/api',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -38,7 +35,7 @@ api.interceptors.response.use(
       localStorage.removeItem('cryptotrack_token');
       window.location.href = '/login';
     }
-    
+
     // Network error
     if (!error.response) {
       return Promise.reject({
@@ -46,10 +43,10 @@ api.interceptors.response.use(
         status: 'NETWORK_ERROR',
       });
     }
-    
+
     // Server error with custom message
     const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
-    
+
     return Promise.reject({
       message: errorMessage,
       status: error.response.status,

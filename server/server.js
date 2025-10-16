@@ -20,21 +20,10 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // CORS configuration
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? (process.env.FRONTEND_URL || '').split(',').filter(Boolean)
-  : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://your-frontend-domain.com'
+    : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
   credentials: true
 }));
 
@@ -80,34 +69,34 @@ app.get('/api/health', (req, res) => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  
+
   // JWT error handling
   if (err.name === 'JsonWebTokenError') {
     return res.status(401).json({ message: 'Invalid token' });
   }
-  
+
   if (err.name === 'TokenExpiredError') {
     return res.status(401).json({ message: 'Token expired' });
   }
-  
+
   // Mongoose validation error
   if (err.name === 'ValidationError') {
     const errors = Object.values(err.errors).map(e => e.message);
     return res.status(400).json({ message: 'Validation Error', errors });
   }
-  
+
   // Mongoose duplicate key error
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
-    return res.status(400).json({ 
-      message: `${field} already exists` 
+    return res.status(400).json({
+      message: `${field} already exists`
     });
   }
-  
-  res.status(500).json({ 
-    message: process.env.NODE_ENV === 'production' 
-      ? 'Something went wrong!' 
-      : err.message 
+
+  res.status(500).json({
+    message: process.env.NODE_ENV === 'production'
+      ? 'Something went wrong!'
+      : err.message
   });
 });
 
