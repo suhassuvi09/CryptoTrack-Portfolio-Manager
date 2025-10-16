@@ -24,11 +24,10 @@
 - [Tech Stack](#-tech-stack)
 - [Installation](#-installation)
 - [Usage](#-usage)
-- [Project Structure](#-project-structure)
 - [Environment Variables](#-environment-variables)
 - [Security](#-security)
-- [Contributing](#-contributing)
-- [License](#-license)
+
+
 
 ---
 
@@ -146,7 +145,7 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/cryptotrack.git
+   git clone https://github.com/suhassuvi09/CryptoTrack-Portfolio-Manager
    cd cryptotrack
    ```
 
