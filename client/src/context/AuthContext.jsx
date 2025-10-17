@@ -23,11 +23,11 @@ export const AuthProvider = ({ children }) => {
       try {
         const token = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
-        
+
         if (token && storedUser) {
           setUser(JSON.parse(storedUser));
           setIsAuthenticated(true);
-          
+
           // Optionally verify token with backend
           try {
             const response = await authService.getCurrentUser();
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await authService.login(email, password);
-      
+
       if (response.token && response.user) {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         toast.success('Login successful!');
         return { success: true };
       }
-      
+
       toast.error('Login failed: Invalid response from server');
       return { success: false };
     } catch (error) {
@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (email, password, confirmPassword) => {
     try {
       const response = await authService.register(email, password, confirmPassword);
-      
+
       if (response.token && response.user) {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
         toast.success('Registration successful!');
         return { success: true };
       }
-      
+
       toast.error('Registration failed: Invalid response from server');
       return { success: false };
     } catch (error) {

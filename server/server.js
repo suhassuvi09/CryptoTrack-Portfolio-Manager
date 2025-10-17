@@ -4,7 +4,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -85,32 +84,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve static files from React app in production
-if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-
-  // Serve index.html for any unknown routes (for client-side routing)
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-  });
-} else {
-  // Root route for development
-  app.get('/', (req, res) => {
-    res.json({
-      message: 'CryptoTrack API Server',
-      version: '1.0.0',
-      endpoints: {
-        auth: '/api/auth',
-        portfolio: '/api/portfolio',
-        watchlist: '/api/watchlist',
-        crypto: '/api/crypto',
-        health: '/api/health'
-      }
-    });
-  });
-}
-
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -145,7 +118,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
+// 404 handler - must be last
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
