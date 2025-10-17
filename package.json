@@ -1,15 +1,19 @@
 {
-  "name": "cryptotrack-portfolio-manager",
-  "version": "1.0.0",
-  "description": "Cryptocurrency Portfolio Tracker",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "cd server && npm run dev",
-    "install-server": "cd server && npm install",
-    "install-client": "cd client && npm install"
-  },
-  "keywords": ["cryptocurrency", "portfolio", "tracker"],
-  "author": "",
-  "license": "ISC"
+    "name": "cryptotrack-portfolio-manager",
+    "version": "1.0.0",
+    "description": "Cryptocurrency Portfolio Tracker",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "cd server && npm run dev",
+        "install-server": "cd server && npm install",
+        "install-client": "cd client && npm install"
+    },
+    "keywords": [
+        "cryptocurrency",
+        "portfolio",
+        "tracker"
+    ],
+    "author": "",
+    "license": "ISC"
 }

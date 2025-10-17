@@ -60,7 +60,7 @@ app.use('/api/crypto', require('./routes/crypto'));
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'CryptoTrack API Server',
     version: '1.0.0',
     status: 'running',
@@ -95,7 +95,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   // Root route for development
   app.get('/', (req, res) => {
-    res.json({ 
+    res.json({
       message: 'CryptoTrack API Server',
       version: '1.0.0',
       endpoints: {
