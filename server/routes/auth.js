@@ -1,50 +1,11 @@
 const express = require('express');
-const { body, validationResult } = require('express-validator');
-const rateLimit = require('express-rate-limit');
-const { User } = require('../models');
-const { generateToken, auth } = require('../middleware/auth');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
+const { User } = require('../models');
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
-
-// Rate limiting for auth routes
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs for auth routes
-  message: 'Too many authentication attempts, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-// Validation middleware
-const registerValidation = [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email address'),
-  body('password')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters long')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
-  body('confirmPassword')
-    .custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error('Password confirmation does not match password');
-      }
-      return true;
-    })
-];
-
-const loginValidation = [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email address'),
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required')
-];
 
 // Helper function to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -64,24 +25,32 @@ const handleValidationErrors = (req, res, next) => {
 // @route   POST /api/auth/register
 // @desc    Register a new user
 // @access  Public
-router.post('/register', authLimiter, registerValidation, handleValidationErrors, async (req, res) => {
+router.post('/register', [
+  body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('confirmPassword').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Passwords do not match');
+    }
+    return true;
+  })
+], handleValidationErrors, async (req, res) => {
   try {
-    const { email, password, confirmPassword } = req.body;
+    const { email, password } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists with this email address' });
+      return res.status(400).json({ message: 'User already exists' });
     }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
     const user = new User({
       email,
-      password,
-      preferences: {
-        currency: 'usd',
-        theme: 'light'
-      }
+      password: hashedPassword,
     });
 
     await user.save();
@@ -110,26 +79,30 @@ router.post('/register', authLimiter, registerValidation, handleValidationErrors
 });
 
 // @route   POST /api/auth/login
-// @desc    Authenticate user and return token
+// @desc    Login user
 // @access  Public
-router.post('/login', authLimiter, loginValidation, handleValidationErrors, async (req, res) => {
+router.post('/login', [
+  body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email'),
+  body('password').notEmpty().withMessage('Password is required')
+], handleValidationErrors, async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user by email and include password
-    const user = await User.findByEmail(email);
+    // Check if user exists
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Check password
-    const isPasswordMatch = await user.matchPassword(password);
-    if (!isPasswordMatch) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Update last login
-    await user.updateLastLogin();
+    user.lastLogin = new Date();
+    await user.save();
 
     // Generate JWT token
     const token = jwt.sign(
@@ -155,120 +128,25 @@ router.post('/login', authLimiter, loginValidation, handleValidationErrors, asyn
 });
 
 // @route   GET /api/auth/me
-// @desc    Get current user profile
+// @desc    Get current user
 // @access  Private
 router.get('/me', auth, async (req, res) => {
   try {
+    const user = await User.findById(req.user._id).select('-password');
     res.json({
-      user: req.user
+      message: 'User retrieved successfully',
+      data: user
     });
   } catch (error) {
-    console.error('Get profile error:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// @route   PUT /api/auth/profile
-// @desc    Update user profile
-// @access  Private
-router.put('/profile', auth, [
-  body('email').optional().isEmail().normalizeEmail(),
-  body('preferences.currency').optional().isIn(['usd', 'eur', 'btc', 'eth']),
-  body('preferences.theme').optional().isIn(['light', 'dark'])
-], handleValidationErrors, async (req, res) => {
-  try {
-    const { email, preferences } = req.body;
-    const userId = req.user._id;
-
-    const updateFields = {};
-
-    if (email && email !== req.user.email) {
-      // Check if new email already exists
-      const existingUser = await User.findOne({ email, _id: { $ne: userId } });
-      if (existingUser) {
-        return res.status(400).json({ message: 'Email address is already in use' });
-      }
-      updateFields.email = email;
-    }
-
-    if (preferences) {
-      updateFields.preferences = {
-        ...req.user.preferences,
-        ...preferences
-      };
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      updateFields,
-      { new: true, runValidators: true }
-    );
-
-    res.json({
-      message: 'Profile updated successfully',
-      user: updatedUser
-    });
-
-  } catch (error) {
-    console.error('Update profile error:', error);
-
-    if (error.code === 11000) {
-      return res.status(400).json({ message: 'Email address is already in use' });
-    }
-
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// @route   POST /api/auth/change-password
-// @desc    Change user password
-// @access  Private
-router.post('/change-password', auth, [
-  body('currentPassword').notEmpty().withMessage('Current password is required'),
-  body('newPassword')
-    .isLength({ min: 6 })
-    .withMessage('New password must be at least 6 characters long')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('New password must contain at least one uppercase letter, one lowercase letter, and one number'),
-  body('confirmNewPassword')
-    .custom((value, { req }) => {
-      if (value !== req.body.newPassword) {
-        throw new Error('Password confirmation does not match new password');
-      }
-      return true;
-    })
-], handleValidationErrors, async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-    const userId = req.user._id;
-
-    // Get user with password
-    const user = await User.findById(userId).select('+password');
-
-    // Verify current password
-    const isCurrentPasswordMatch = await user.matchPassword(currentPassword);
-    if (!isCurrentPasswordMatch) {
-      return res.status(400).json({ message: 'Current password is incorrect' });
-    }
-
-    // Update password
-    user.password = newPassword;
-    await user.save();
-
-    res.json({ message: 'Password changed successfully' });
-
-  } catch (error) {
-    console.error('Change password error:', error);
+    console.error('Get user error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
 // @route   POST /api/auth/logout
-// @desc    Logout user (client-side token removal)
+// @desc    Logout user
 // @access  Private
-router.post('/logout', auth, (req, res) => {
-  // Since JWT is stateless, logout is handled on client-side
-  // This endpoint can be used for logging or additional cleanup
+router.post('/logout', auth, async (req, res) => {
   res.json({ message: 'Logout successful' });
 });
 
