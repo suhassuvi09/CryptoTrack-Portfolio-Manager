@@ -1,13 +1,15 @@
 {
-    "name": "nodejs-app",
-    "version": "1.0.0",
-    "description": "Node.js app",
-    "main": "server.js",
-    "scripts": {
-        "build": "npm install",
-        "start": "node server.js"
-    },
-    "dependencies": {
-        "express": "^4.18.2"
-    }
+  "name": "cryptotrack-portfolio-manager",
+  "version": "1.0.0",
+  "description": "Cryptocurrency Portfolio Tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "cd server && npm run dev",
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install"
+  },
+  "keywords": ["cryptocurrency", "portfolio", "tracker"],
+  "author": "",
+  "license": "ISC"
 }

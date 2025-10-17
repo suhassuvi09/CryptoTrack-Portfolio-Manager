@@ -1,333 +1,208 @@
-# 🚀 CryptoTrack - Cryptocurrency Portfolio Manager
+# CryptoTrack - Premium Cryptocurrency Portfolio Manager
 
-<div align="center">
+A full-stack cryptocurrency portfolio tracker with real-time price data, user authentication, and portfolio management features.
 
-![CryptoTrack Banner](https://img.shields.io/badge/CryptoTrack-Portfolio%20Manager-blue?style=for-the-badge&logo=bitcoin&logoColor=white)
+![CryptoTrack Dashboard](client/public/dashboard-preview.png)
 
-**A modern, full-stack cryptocurrency portfolio tracking application with real-time market data, advanced analytics, and secure user management.**
+## Features
 
-[![React](https://img.shields.io/badge/React-19.1-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+- Real-time cryptocurrency price tracking with live updates
+- Advanced portfolio management with profit/loss calculations
+- Interactive watchlist functionality with price alerts
+- Comprehensive analytics and performance charts
+- User authentication with JWT-based security
+- Export functionality (PDF/CSV) for portfolio reports
+- Responsive design with premium dark/light theme toggle
+- Mobile-first approach with touch-friendly interface
+- Premium UI/UX design with gradients, shadows, and animations
 
-[Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) • [Usage](#-usage)  [Contributing](#-contributing)
-
-</div>
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Environment Variables](#-environment-variables)
-- [Security](#-security)
-
-
-
----
-
-## 🌟 Overview
-
-CryptoTrack is a comprehensive cryptocurrency portfolio management platform that enables users to track their crypto investments in real-time, analyze performance metrics, manage watchlists, and export detailed reports. Built with modern web technologies, it offers a seamless experience across all devices with dark/light theme support.
-
-### Why CryptoTrack?
-
-- 📊 **Real-time Data**: Live cryptocurrency prices from CoinGecko API
-- 💼 **Portfolio Management**: Track holdings with automatic profit/loss calculations
-- 📈 **Advanced Analytics**: Visualize portfolio performance with interactive charts
-- 🔐 **Secure**: JWT authentication with bcrypt password hashing
-- 🎨 **Modern UI**: Beautiful, responsive design with dark mode support
-- 📱 **Mobile-First**: Optimized for all screen sizes
-- 💱 **Multi-Currency**: Support for USD, EUR, BTC, and ETH
-- 📄 **Export Reports**: Generate PDF and CSV reports of your portfolio
-
----
-
-## ✨ Features
-
-### Core Functionality
-
-- ✅ **User Authentication**
-  - Secure registration and login with JWT tokens
-  - Password encryption with bcryptjs
-  - Profile management and password change
-  - Session persistence with localStorage
-
-- ✅ **Portfolio Management**
-  - Add, edit, and delete cryptocurrency holdings
-  - Real-time profit/loss calculations
-  - Track purchase price and current value
-  - Portfolio analytics with performance metrics
-  - Export to PDF and CSV formats
-
-- ✅ **Cryptocurrency Market Data**
-  - Live prices for top 100 cryptocurrencies
-  - Market cap, volume, and 24h change tracking
-  - Search and filter functionality
-  - Detailed coin information
-
-- ✅ **Watchlist System**
-  - Add/remove coins to personal watchlist
-  - Real-time price monitoring
-  - Quick access to favorite cryptocurrencies
-
-- ✅ **Analytics Dashboard**
-  - Portfolio allocation pie charts
-  - Top/worst performing assets
-  - Total value and P&L tracking
-  - Historical performance graphs
-
-- ✅ **User Experience**
-  - Dark/Light theme toggle
-  - Multi-currency support (USD, EUR, BTC, ETH)
-  - Responsive design for all devices
-  - Loading states and error handling
-  - Toast notifications for user feedback
-
----
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
-
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **React** | 19.1 | UI library for building user interfaces |
-| **Vite** | 7.1 | Fast build tool and dev server |
-| **React Router** | 7.9 | Client-side routing |
-| **Tailwind CSS** | 3.4 | Utility-first CSS framework |
-| **Chart.js** | 4.5 | Data visualization and charts |
-| **Axios** | 1.12 | HTTP client for API requests |
-| **React Hot Toast** | 2.6 | Toast notifications |
-| **Lucide React** | Latest | Modern icon library |
-| **jsPDF** | 3.0 | PDF generation |
-| **html2canvas** | 1.4 | HTML to canvas conversion |
+- React.js with Vite for lightning-fast development
+- Tailwind CSS for responsive styling
+- React Router for navigation
+- Chart.js for data visualization
+- Axios for HTTP requests
+- React Hot Toast for notifications
+- Lucide React for icons
 
 ### Backend
+- Node.js with Express.js framework
+- MongoDB with Mongoose for data persistence
+- JWT authentication for secure user sessions
+- bcryptjs for password hashing
+- Helmet & CORS for security
+- Rate limiting for API protection
+- CoinGecko API for cryptocurrency data
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Node.js** | 16+ | JavaScript runtime |
-| **Express.js** | 4.18 | Web application framework |
-| **MongoDB** | Latest | NoSQL database |
-| **Mongoose** | 8.18 | MongoDB ODM |
-| **JWT** | 9.0 | JSON Web Token authentication |
-| **bcryptjs** | 3.0 | Password hashing |
-| **Helmet** | 8.1 | Security middleware |
-| **CORS** | 2.8 | Cross-origin resource sharing |
-| **express-validator** | 7.2 | Input validation |
-| **express-rate-limit** | 8.1 | API rate limiting |
-| **Morgan** | 1.10 | HTTP request logger |
-| **node-cron** | 4.2 | Task scheduling |
+## Premium UI/UX Enhancements
 
-### External APIs
+### Visual Design
+- Custom premium color palette with gradients
+- Consistent shadow system for depth perception
+- Smooth animations and transitions
+- Enhanced typography hierarchy
+- Premium card components with hover effects
+- Gradient buttons and interactive elements
 
-- **CoinGecko API** - Real-time cryptocurrency data
+### User Experience
+- Intuitive dashboard with quick actions
+- Responsive tables with enhanced styling
+- Improved form validation and user feedback
+- Loading states with premium spinners
+- Seamless dark/light theme toggle
+- Mobile-optimized layouts
 
----
-
-## 📦 Installation
+## Getting Started
 
 ### Prerequisites
+- Node.js (v16 or higher)
+- MongoDB Atlas account or local MongoDB installation
+- Git
 
-Before you begin, ensure you have the following installed:
-- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
-- **npm** or **yarn** - Package manager
-- **MongoDB Atlas** account or local MongoDB - [Sign up](https://www.mongodb.com/cloud/atlas)
-- **Git** - [Download](https://git-scm.com/)
+### Installation
 
-### Step-by-Step Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/suhassuvi09/CryptoTrack-Portfolio-Manager
-   cd CryptoTrack-Portfolio-Manager
-   ```
-
-2. **Install server dependencies**
-   ```bash
-   cd server
-   npm install
-   ```
-
-3. **Install client dependencies**
-   ```bash
-   cd ../client
-   npm install
-   ```
-
-4. **Configure environment variables**
-   
-   Create a `.env` file in the `server` directory:
-   ```env
-   # Server Configuration
-   PORT=5001
-   NODE_ENV=development
-   
-   # Database
-   MONGODB_URI=your_mongodb_connection_string
-   
-   # JWT Secret
-   JWT_SECRET=your_super_secret_jwt_key_here
-   JWT_EXPIRE=7d
-   
-   # CoinGecko API (optional - free tier works without key)
-   COINGECKO_API_KEY=your_api_key_here
-   ```
-
-5. **Start the development servers**
-   
-   **Terminal 1 - Backend Server:**
-   ```bash
-   cd server
-   npm run dev
-   ```
-   Server will run on `http://localhost:5001`
-   
-   **Terminal 2 - Frontend Development Server:**
-   ```bash
-   cd client
-   npm run dev
-   ```
-   Client will run on `http://localhost:5173`
-
-6. **Access the application**
-   
-   Open your browser and navigate to `http://localhost:5173`
-
----
-
-## 🚀 Usage
-
-### Getting Started
-
-1. **Register an Account**
-   - Click "Get Started" or "Sign Up"
-   - Enter your email and password (minimum 6 characters)
-   - Click "Create Account"
-
-2. **Add Your First Holding**
-   - Navigate to Portfolio page
-   - Click "Add Holding" button
-   - Select cryptocurrency, enter amount and purchase price
-   - Click "Add" to save
-
-3. **Track Prices**
-   - Visit Markets page to see all cryptocurrencies
-   - Use search to find specific coins
-   - Click "Add to Watchlist" for quick access
-
-4. **View Analytics**
-   - Go to Analytics page
-   - See portfolio allocation charts
-   - Track profit/loss metrics
-   - View top performers
-
-5. **Export Reports**
-   - Navigate to Portfolio page
-   - Click "Export" button
-   - Choose PDF or CSV format
-   - Download your report
-
----
-
-
-
-## 🔐 Environment Variables
-
-### Server Environment Variables
-
-Create a `.env` file in the `server` directory:
-
-```env
-# Server Configuration
-PORT=5001
-NODE_ENV=development
-
-# Database Configuration
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/cryptotrack?retryWrites=true&w=majority
-
-# JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key_minimum_32_characters
-JWT_EXPIRE=7d
-
-# CoinGecko API (Optional)
-COINGECKO_API_KEY=your_api_key_here
-
-# CORS Configuration (Production)
-FRONTEND_URL=https://your-frontend-domain.com
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd cryptotrack
 ```
 
-### Important Notes
+2. Install backend dependencies
+```bash
+cd server
+npm install
+```
 
-⚠️ **Never commit `.env` files to version control**
-⚠️ **Use strong, unique JWT secrets in production**
-⚠️ **Enable MongoDB IP whitelist for production**
+3. Install frontend dependencies
+```bash
+cd ../client
+npm install
+```
 
----
+4. Set up environment variables
+- Copy `.env.example` to `.env` in both client and server directories
+- Configure your MongoDB connection string and JWT secret
+- Add CoinGecko API credentials if needed
 
-## 🔒 Security
+5. Start the development servers
+```bash
+# Terminal 1 - Backend
+cd server
+npm run dev
 
-### Implemented Security Features
+# Terminal 2 - Frontend
+cd client
+npm run dev
+```
 
-- ✅ **Password Security**
-  - Bcrypt hashing with salt rounds (10)
-  - Minimum password length requirements
-  - Password strength validation
+6. Open your browser and navigate to `http://localhost:5173`
 
-- ✅ **Authentication & Authorization**
-  - JWT token-based authentication
-  - Token expiration (7 days default)
-  - Protected routes with middleware
-  - User session management
+## Project Structure
 
-- ✅ **API Security**
-  - Rate limiting (500 requests per 15 minutes)
-  - CORS configuration
-  - Helmet.js security headers
-  - Input validation with express-validator
-  - MongoDB injection prevention
+```
+cryptotrack/
+├── client/                    # React frontend
+│   ├── src/
+│   │   ├── components/        # Reusable UI components
+│   │   │   ├── auth/          # Authentication components
+│   │   │   ├── crypto/        # Cryptocurrency components
+│   │   │   ├── layout/        # Layout components (Header, Sidebar)
+│   │   │   ├── portfolio/     # Portfolio components
+│   │   │   └── ui/            # Generic UI components
+│   │   ├── context/           # React Context providers
+│   │   ├── pages/             # Page components
+│   │   ├── services/          # API service functions
+│   │   ├── utils/             # Utility functions
+│   │   ├── App.jsx            # Main application component
+│   │   ├── index.css          # Global styles
+│   │   └── main.jsx           # Application entry point
+│   └── public/                # Static assets
+├── server/                    # Express backend
+│   ├── controllers/           # Request handlers
+│   ├── middleware/            # Custom middleware
+│   ├── models/                # MongoDB models
+│   ├── routes/                # API routes
+│   ├── services/              # Business logic
+│   ├── utils/                 # Utility functions
+│   ├── config/                # Configuration files
+│   ├── .env                   # Environment variables
+│   ├── server.js              # Server entry point
+│   └── package.json           # Dependencies
+└── README.md
+```
 
-- ✅ **Data Protection**
-  - Secure HTTP headers
-  - XSS protection
-  - Environment variable management
-  - Sensitive data filtering in responses
+## API Endpoints
 
-### Security Best Practices
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/logout` - User logout
 
-1. Always use HTTPS in production
-2. Implement additional rate limiting per user
-3. Add CSRF protection for state-changing operations
-4. Enable MongoDB authentication and encryption at rest
-5. Implement email verification for new accounts
-6. Add two-factor authentication (2FA)
-7. Monitor and log suspicious activities
-8. Regular security audits with `npm audit`
+### Portfolio
+- `GET /api/portfolio` - Get user portfolio
+- `POST /api/portfolio/holdings` - Add new holding
+- `PUT /api/portfolio/holdings/:id` - Update holding
+- `DELETE /api/portfolio/holdings/:id` - Delete holding
+- `GET /api/portfolio/export` - Export portfolio data
 
----
+### Watchlist
+- `GET /api/watchlist` - Get user watchlist
+- `POST /api/watchlist` - Add coin to watchlist
+- `DELETE /api/watchlist/:coinId` - Remove coin from watchlist
 
+### Crypto Data
+- `GET /api/crypto/markets` - Get cryptocurrency market data
+- `GET /api/crypto/global` - Get global market data
+- `GET /api/crypto/coins/:id` - Get specific coin data
 
-##  Acknowledgments
+## Development
 
-- [CoinGecko](https://www.coingecko.com/) - Cryptocurrency data API
-- [React](https://reactjs.org/) - UI library
-- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
-- [Chart.js](https://www.chartjs.org/) - Data visualization
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express.js](https://expressjs.com/) - Web framework
+### Frontend Development
+- Uses Vite for fast development and hot module replacement
+- Tailwind CSS for utility-first styling
+- Component-based architecture for reusability
 
+### Backend Development
+- RESTful API design
+- MongoDB with Mongoose for data modeling
+- JWT-based authentication
+- Error handling and logging
 
+## Security Features
 
-<div align="center">
+- Password hashing with bcrypt
+- JWT token-based authentication
+- CORS configuration
+- API rate limiting
+- Input validation and sanitization
+- Secure HTTP headers with Helmet
 
-**⭐ Star this repo if you find it helpful! ⭐**
+## Performance Optimizations
 
-Made with ❤️ by [SUHAS]
+- Database indexing for faster queries
+- API response caching
+- Efficient data fetching
+- Code splitting
+- Asset optimization
 
-</div>
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a pull request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [CoinGecko API](https://www.coingecko.com/en/api) for cryptocurrency data
+- [React](https://reactjs.org/) for the frontend framework
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Node.js](https://nodejs.org/) for the backend runtime

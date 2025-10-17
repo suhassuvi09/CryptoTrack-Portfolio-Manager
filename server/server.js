@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -57,6 +58,22 @@ app.use('/api/portfolio', require('./routes/portfolio'));
 app.use('/api/watchlist', require('./routes/watchlist'));
 app.use('/api/crypto', require('./routes/crypto'));
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'CryptoTrack API Server',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      auth: '/api/auth',
+      portfolio: '/api/portfolio',
+      watchlist: '/api/watchlist',
+      crypto: '/api/crypto',
+      health: '/api/health'
+    }
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
@@ -65,6 +82,32 @@ app.get('/api/health', (req, res) => {
     uptime: process.uptime()
   });
 });
+
+// Serve static files from React app in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  // Serve index.html for any unknown routes (for client-side routing)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  });
+} else {
+  // Root route for development
+  app.get('/', (req, res) => {
+    res.json({ 
+      message: 'CryptoTrack API Server',
+      version: '1.0.0',
+      endpoints: {
+        auth: '/api/auth',
+        portfolio: '/api/portfolio',
+        watchlist: '/api/watchlist',
+        crypto: '/api/crypto',
+        health: '/api/health'
+      }
+    });
+  });
+}
 
 // Global error handler
 app.use((err, req, res, next) => {

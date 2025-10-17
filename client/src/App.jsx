@@ -31,78 +31,98 @@ function App() {
         <CurrencyProvider>
           <Router>
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-            {/* Toast notifications */}
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: 'var(--toast-bg)',
-                  color: 'var(--toast-color)',
-                },
-                className: 'dark:bg-gray-800 dark:text-white',
-              }}
-            />
-            
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<Layout><Home /></Layout>} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              
-              {/* Protected routes */}
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Layout><Dashboard /></Layout>
-                  </ProtectedRoute>
-                } 
+              {/* Toast notifications */}
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    fontSize: '14px',
+                    padding: '16px',
+                    zIndex: 9999,
+                  },
+                  success: {
+                    style: {
+                      background: '#10b981',
+                      color: '#fff',
+                    },
+                    iconTheme: {
+                      primary: '#fff',
+                      secondary: '#10b981',
+                    },
+                  },
+                  error: {
+                    style: {
+                      background: '#ef4444',
+                      color: '#fff',
+                    },
+                    iconTheme: {
+                      primary: '#fff',
+                      secondary: '#ef4444',
+                    },
+                  },
+                }}
               />
-              <Route 
-                path="/portfolio" 
-                element={
-                  <ProtectedRoute>
-                    <Layout><Portfolio /></Layout>
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/markets" 
-                element={
-                  <Layout><Markets /></Layout>
-                } 
-              />
-              <Route 
-                path="/watchlist" 
-                element={
-                  <ProtectedRoute>
-                    <Layout><Watchlist /></Layout>
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/analytics" 
-                element={
-                  <ProtectedRoute>
-                    <Layout><Analytics /></Layout>
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/settings" 
-                element={
-                  <ProtectedRoute>
-                    <Layout><Settings /></Layout>
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* Catch all route */}
-              <Route path="*" element={<Layout><NotFound /></Layout>} />
-            </Routes>
-          </div>
-        </Router>
+
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<Layout><Home /></Layout>} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
+                {/* Protected routes */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Layout><Dashboard /></Layout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/portfolio"
+                  element={
+                    <ProtectedRoute>
+                      <Layout><Portfolio /></Layout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/markets"
+                  element={
+                    <Layout><Markets /></Layout>
+                  }
+                />
+                <Route
+                  path="/watchlist"
+                  element={
+                    <ProtectedRoute>
+                      <Layout><Watchlist /></Layout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/analytics"
+                  element={
+                    <ProtectedRoute>
+                      <Layout><Analytics /></Layout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute>
+                      <Layout><Settings /></Layout>
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Catch all route */}
+                <Route path="*" element={<Layout><NotFound /></Layout>} />
+              </Routes>
+            </div>
+          </Router>
         </CurrencyProvider>
       </ThemeProvider>
     </AuthProvider>

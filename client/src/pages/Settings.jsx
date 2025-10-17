@@ -35,15 +35,13 @@ const Settings = () => {
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-    
+
     try {
-      const result = await updateProfile(profileForm);
-      if (result.success) {
-        toast.success('Profile updated successfully');
-      }
+      await updateProfile(profileForm);
+      // Toast is already shown in AuthContext via showNotification parameter
     } catch (error) {
       console.error('Failed to update profile:', error);
-      toast.error('Failed to update profile');
+      // Error toast is already shown in AuthContext
     } finally {
       setIsSaving(false);
     }
@@ -51,22 +49,23 @@ const Settings = () => {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    
+
     if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
       toast.error('New passwords do not match');
       return;
     }
-    
+
     setIsSaving(true);
-    
+
     try {
       const result = await changePassword(
         passwordForm.currentPassword,
-        passwordForm.newPassword
+        passwordForm.newPassword,
+        passwordForm.confirmNewPassword
       );
-      
+
       if (result.success) {
-        toast.success('Password changed successfully');
+        // Toast is already shown in AuthContext, just clear the form
         setPasswordForm({
           currentPassword: '',
           newPassword: '',
@@ -75,7 +74,7 @@ const Settings = () => {
       }
     } catch (error) {
       console.error('Failed to change password:', error);
-      toast.error(error.message || 'Failed to change password');
+      // Error toast is already shown in AuthContext
     } finally {
       setIsSaving(false);
     }
@@ -126,35 +125,32 @@ const Settings = () => {
             <nav className="space-y-1">
               <button
                 onClick={() => setActiveTab('profile')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 text-left rounded-lg transition-all duration-200 ${
-                  activeTab === 'profile'
-                    ? 'bg-gradient-to-r from-primary-500/10 to-primary-700/10 text-primary-700 dark:text-primary-300 shadow-sm'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
+                className={`w-full flex items-center space-x-3 px-3 py-2 text-left rounded-lg transition-all duration-200 ${activeTab === 'profile'
+                  ? 'bg-gradient-to-r from-primary-500/10 to-primary-700/10 text-primary-700 dark:text-primary-300 shadow-sm'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
               >
                 <User className="h-5 w-5" />
                 <span>Profile</span>
               </button>
-              
+
               <button
                 onClick={() => setActiveTab('security')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 text-left rounded-lg transition-all duration-200 ${
-                  activeTab === 'security'
-                    ? 'bg-gradient-to-r from-primary-500/10 to-primary-700/10 text-primary-700 dark:text-primary-300 shadow-sm'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
+                className={`w-full flex items-center space-x-3 px-3 py-2 text-left rounded-lg transition-all duration-200 ${activeTab === 'security'
+                  ? 'bg-gradient-to-r from-primary-500/10 to-primary-700/10 text-primary-700 dark:text-primary-300 shadow-sm'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
               >
                 <Lock className="h-5 w-5" />
                 <span>Security</span>
               </button>
-              
+
               <button
                 onClick={() => setActiveTab('preferences')}
-                className={`w-full flex items-center space-x-3 px-3 py-2 text-left rounded-lg transition-all duration-200 ${
-                  activeTab === 'preferences'
-                    ? 'bg-gradient-to-r from-primary-500/10 to-primary-700/10 text-primary-700 dark:text-primary-300 shadow-sm'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
+                className={`w-full flex items-center space-x-3 px-3 py-2 text-left rounded-lg transition-all duration-200 ${activeTab === 'preferences'
+                  ? 'bg-gradient-to-r from-primary-500/10 to-primary-700/10 text-primary-700 dark:text-primary-300 shadow-sm'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
               >
                 <Palette className="h-5 w-5" />
                 <span>Preferences</span>
@@ -171,7 +167,7 @@ const Settings = () => {
               <h2 className="section-header mb-6">
                 Profile Information
               </h2>
-              
+
               <form onSubmit={handleSaveProfile} className="space-y-6">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -192,7 +188,7 @@ const Settings = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="flex justify-end">
                   <button
                     type="submit"
@@ -217,7 +213,7 @@ const Settings = () => {
               <h2 className="section-header mb-6">
                 Security Settings
               </h2>
-              
+
               <form onSubmit={handleChangePassword} className="space-y-6">
                 <div>
                   <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -249,7 +245,7 @@ const Settings = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <div>
                   <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     New Password
@@ -280,7 +276,7 @@ const Settings = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <div>
                   <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Confirm New Password
@@ -311,7 +307,7 @@ const Settings = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="flex justify-end">
                   <button
                     type="submit"
@@ -336,13 +332,13 @@ const Settings = () => {
               <h2 className="section-header mb-6">
                 Preferences
               </h2>
-              
+
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                     Appearance
                   </h3>
-                  
+
                   <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <div className="flex items-center space-x-3">
                       <Palette className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -355,25 +351,24 @@ const Settings = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <button
                       onClick={handleThemeToggle}
                       className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 dark:bg-gray-600 transition-colors"
                     >
                       <span
-                        className={`${
-                          isDarkTheme() ? 'translate-x-6' : 'translate-x-1'
-                        } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                        className={`${isDarkTheme() ? 'translate-x-6' : 'translate-x-1'
+                          } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                       />
                     </button>
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                     Language
                   </h3>
-                  
+
                   <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <div className="flex items-center space-x-3">
                       <Globe className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -386,7 +381,7 @@ const Settings = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <select
                       className="premium-input bg-white dark:bg-gray-700"
                       disabled

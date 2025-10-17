@@ -30,7 +30,10 @@ api.interceptors.response.use(
   },
   (error) => {
     // Handle common errors
-    if (error.response?.status === 401) {
+    // Only redirect to login if 401 and not from login/register endpoints
+    if (error.response?.status === 401 &&
+      !error.config?.url?.includes('/auth/login') &&
+      !error.config?.url?.includes('/auth/register')) {
       // Unauthorized - clear token and redirect to login
       localStorage.removeItem('cryptotrack_token');
       window.location.href = '/login';

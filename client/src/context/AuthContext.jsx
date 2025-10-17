@@ -147,7 +147,7 @@ export const AuthProvider = ({ children }) => {
   // Load user from token
   const loadUser = async () => {
     const token = localStorage.getItem('cryptotrack_token');
-    
+
     if (!token) {
       dispatch({ type: AuthActionTypes.SET_LOADING, payload: false });
       return;
@@ -156,7 +156,7 @@ export const AuthProvider = ({ children }) => {
     try {
       authService.setAuthToken(token);
       const response = await authService.getCurrentUser();
-      
+
       dispatch({
         type: AuthActionTypes.LOAD_USER_SUCCESS,
         payload: response.user,
@@ -177,7 +177,7 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: AuthActionTypes.LOGIN_START });
 
       const response = await authService.login(email, password);
-      
+
       dispatch({
         type: AuthActionTypes.LOGIN_SUCCESS,
         payload: response,
@@ -186,25 +186,22 @@ export const AuthProvider = ({ children }) => {
       toast.success('Login successful!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed';
-      
+      // Handle error from transformed interceptor response
+      const message = error.message || error.response?.data?.message || 'Login failed';
+
       dispatch({
         type: AuthActionTypes.LOGIN_FAILURE,
         payload: message,
-      });
-
-      toast.error(message);
+      }); toast.error(message);
       return { success: false, error: message };
     }
-  };
-
-  // Register function
+  };  // Register function
   const register = async (email, password, confirmPassword) => {
     try {
       dispatch({ type: AuthActionTypes.REGISTER_START });
 
       const response = await authService.register(email, password, confirmPassword);
-      
+
       dispatch({
         type: AuthActionTypes.REGISTER_SUCCESS,
         payload: response,
@@ -213,8 +210,9 @@ export const AuthProvider = ({ children }) => {
       toast.success('Registration successful! Welcome to CryptoTrack!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed';
-      
+      // Handle error from transformed interceptor response
+      const message = error.message || error.response?.data?.message || 'Registration failed';
+
       dispatch({
         type: AuthActionTypes.REGISTER_FAILURE,
         payload: message,
@@ -243,7 +241,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (profileData, showNotification = true) => {
     try {
       const response = await authService.updateProfile(profileData);
-      
+
       dispatch({
         type: AuthActionTypes.UPDATE_PROFILE_SUCCESS,
         payload: response.user,
@@ -254,20 +252,22 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: true, user: response.user };
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to update profile';
+      // Handle error from transformed interceptor response
+      const message = error.message || error.response?.data?.message || 'Failed to update profile';
       toast.error(message);
       return { success: false, error: message };
     }
   };
 
   // Change password function
-  const changePassword = async (currentPassword, newPassword) => {
+  const changePassword = async (currentPassword, newPassword, confirmNewPassword) => {
     try {
-      await authService.changePassword(currentPassword, newPassword);
+      await authService.changePassword(currentPassword, newPassword, confirmNewPassword);
       toast.success('Password changed successfully');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to change password';
+      // Handle error from transformed interceptor response
+      const message = error.message || error.response?.data?.message || 'Failed to change password';
       toast.error(message);
       return { success: false, error: message };
     }
