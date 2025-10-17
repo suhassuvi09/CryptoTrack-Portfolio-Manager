@@ -71,16 +71,42 @@ const connectDB = async () => {
   }
 };
 
-// Routes - Add console logs to verify routes are loaded
-console.log('Loading routes...');
-app.use('/api/auth', require('./routes/auth'));
-console.log('Auth routes loaded');
-app.use('/api/portfolio', require('./routes/portfolio'));
-console.log('Portfolio routes loaded');
-app.use('/api/watchlist', require('./routes/watchlist'));
-console.log('Watchlist routes loaded');
-app.use('/api/crypto', require('./routes/crypto'));
-console.log('Crypto routes loaded');
+// Routes
+console.log('=== Loading routes ===');
+
+try {
+  const authRoutes = require('./routes/auth');
+  app.use('/api/auth', authRoutes);
+  console.log('✓ Auth routes loaded');
+} catch (error) {
+  console.error('✗ Error loading auth routes:', error);
+}
+
+try {
+  const portfolioRoutes = require('./routes/portfolio');
+  app.use('/api/portfolio', portfolioRoutes);
+  console.log('✓ Portfolio routes loaded');
+} catch (error) {
+  console.error('✗ Error loading portfolio routes:', error);
+}
+
+try {
+  const watchlistRoutes = require('./routes/watchlist');
+  app.use('/api/watchlist', watchlistRoutes);
+  console.log('✓ Watchlist routes loaded');
+} catch (error) {
+  console.error('✗ Error loading watchlist routes:', error);
+}
+
+try {
+  const cryptoRoutes = require('./routes/crypto');
+  app.use('/api/crypto', cryptoRoutes);
+  console.log('✓ Crypto routes loaded');
+} catch (error) {
+  console.error('✗ Error loading crypto routes:', error);
+}
+
+console.log('=== Routes loading complete ===');
 
 // Root route
 app.get('/', (req, res) => {
