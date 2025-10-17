@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const { User } = require('../models');
+const User = require('../models/User'); // Change this line
 const { auth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -148,6 +148,11 @@ router.get('/me', auth, async (req, res) => {
 // @access  Private
 router.post('/logout', auth, async (req, res) => {
   res.json({ message: 'Logout successful' });
+});
+
+// Test route
+router.get('/test', (req, res) => {
+  res.json({ message: 'Auth routes are working!' });
 });
 
 module.exports = router;

@@ -1,6 +1,9 @@
-// Export all models from a single file for easier imports
+const User = require('./User');
+const Holding = require('./Holding');
+const Watchlist = require('./Watchlist');
+
 module.exports = {
-  User: require('./User'),
-  Holding: require('./Holding'),
-  Watchlist: require('./Watchlist')
+  User,
+  Holding,
+  Watchlist,
 };

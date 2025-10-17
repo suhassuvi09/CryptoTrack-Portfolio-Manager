@@ -35,7 +35,7 @@ app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.indexOf(origin) === -1 && process.env.NODE_ENV === 'production') {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
@@ -71,11 +71,16 @@ const connectDB = async () => {
   }
 };
 
-// Routes
+// Routes - Add console logs to verify routes are loaded
+console.log('Loading routes...');
 app.use('/api/auth', require('./routes/auth'));
+console.log('Auth routes loaded');
 app.use('/api/portfolio', require('./routes/portfolio'));
+console.log('Portfolio routes loaded');
 app.use('/api/watchlist', require('./routes/watchlist'));
+console.log('Watchlist routes loaded');
 app.use('/api/crypto', require('./routes/crypto'));
+console.log('Crypto routes loaded');
 
 // Root route
 app.get('/', (req, res) => {
