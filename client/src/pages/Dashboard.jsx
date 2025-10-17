@@ -13,7 +13,7 @@ import { exportToCSV, exportToPDF } from '../utils/exportUtils';
 import toast from 'react-hot-toast';
 
 const Dashboard = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, isAuthenticated } = useAuth();
   const { selectedCurrency, exchangeRates } = useCurrency();
   const [portfolio, setPortfolio] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
@@ -130,15 +130,16 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    console.log('Dashboard - Auth State:', { user, isAuthenticated, authLoading }); // Debug log
+    if (user && isAuthenticated) {
       fetchDashboardData();
     } else {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   // Add a check to ensure we show content when not loading
-  if (authLoading || loading) {
+  if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-96">
         <LoadingSpinner size="large" />
@@ -146,8 +147,7 @@ const Dashboard = () => {
     );
   }
 
-  // If user is not authenticated, redirect to login (this should be handled by ProtectedRoute)
-  if (!user && !authLoading) {
+  if (!isAuthenticated || !user) {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
