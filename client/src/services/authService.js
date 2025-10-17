@@ -76,38 +76,73 @@ export const authService = {
 
   // Login
   login: async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    if (response.token) {
-      setAuthToken(response.token);
+    try {
+      const response = await api.post('/auth/login', {
+        email,
+        password,
+      });
+
+      console.log('Login response:', response); // Debug log
+
+      // Handle different response formats
+      if (response.data) {
+        return {
+          token: response.data.token || response.token,
+          user: response.data.user || response.user,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.error('Login service error:', error);
+      throw error;
     }
-    return response;
   },
 
   // Register
   register: async (email, password, confirmPassword) => {
-    const response = await api.post('/auth/register', {
-      email,
-      password,
-      confirmPassword,
-    });
-    if (response.token) {
-      setAuthToken(response.token);
+    try {
+      const response = await api.post('/auth/register', {
+        email,
+        password,
+        confirmPassword,
+      });
+
+      console.log('Register response:', response); // Debug log
+
+      // Handle different response formats
+      if (response.data) {
+        return {
+          token: response.data.token || response.token,
+          user: response.data.user || response.user,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.error('Register service error:', error);
+      throw error;
     }
-    return response;
   },
 
   // Logout
   logout: async () => {
     try {
       await api.post('/auth/logout');
-    } finally {
-      setAuthToken(null);
+    } catch (error) {
+      console.error('Logout service error:', error);
     }
   },
 
   // Get current user
   getCurrentUser: async () => {
-    return await api.get('/auth/me');
+    try {
+      const response = await api.get('/auth/me');
+      return response;
+    } catch (error) {
+      console.error('Get current user error:', error);
+      throw error;
+    }
   },
 
   // Update profile

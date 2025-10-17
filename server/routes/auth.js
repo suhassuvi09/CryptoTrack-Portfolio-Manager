@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const rateLimit = require('express-rate-limit');
 const { User } = require('../models');
 const { generateToken, auth } = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -66,13 +67,13 @@ const handleValidationErrors = (req, res, next) => {
 router.post('/register', authLimiter, registerValidation, handleValidationErrors, async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
-    
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists with this email address' });
     }
-    
+
     // Create new user
     const user = new User({
       email,
@@ -82,28 +83,28 @@ router.post('/register', authLimiter, registerValidation, handleValidationErrors
         theme: 'light'
       }
     });
-    
+
     await user.save();
-    
-    // Generate token
-    const token = generateToken(user._id);
-    
-    // Remove password from response
-    const userResponse = user.toJSON();
-    
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '7d' }
+    );
+
     res.status(201).json({
       message: 'User registered successfully',
       token,
-      user: userResponse
+      user: {
+        id: user._id,
+        email: user.email,
+        createdAt: user.createdAt,
+        preferences: user.preferences
+      }
     });
-    
   } catch (error) {
     console.error('Registration error:', error);
-    
-    if (error.code === 11000) {
-      return res.status(400).json({ message: 'Email address is already registered' });
-    }
-    
     res.status(500).json({ message: 'Server error during registration' });
   }
 });
@@ -114,34 +115,39 @@ router.post('/register', authLimiter, registerValidation, handleValidationErrors
 router.post('/login', authLimiter, loginValidation, handleValidationErrors, async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // Find user by email and include password
     const user = await User.findByEmail(email);
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-    
+
     // Check password
     const isPasswordMatch = await user.matchPassword(password);
     if (!isPasswordMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-    
+
     // Update last login
     await user.updateLastLogin();
-    
-    // Generate token
-    const token = generateToken(user._id);
-    
-    // Remove password from response
-    const userResponse = user.toJSON();
-    
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '7d' }
+    );
+
     res.json({
       message: 'Login successful',
       token,
-      user: userResponse
+      user: {
+        id: user._id,
+        email: user.email,
+        createdAt: user.createdAt,
+        preferences: user.preferences
+      }
     });
-    
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error during login' });
@@ -173,9 +179,9 @@ router.put('/profile', auth, [
   try {
     const { email, preferences } = req.body;
     const userId = req.user._id;
-    
+
     const updateFields = {};
-    
+
     if (email && email !== req.user.email) {
       // Check if new email already exists
       const existingUser = await User.findOne({ email, _id: { $ne: userId } });
@@ -184,32 +190,32 @@ router.put('/profile', auth, [
       }
       updateFields.email = email;
     }
-    
+
     if (preferences) {
       updateFields.preferences = {
         ...req.user.preferences,
         ...preferences
       };
     }
-    
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       updateFields,
       { new: true, runValidators: true }
     );
-    
+
     res.json({
       message: 'Profile updated successfully',
       user: updatedUser
     });
-    
+
   } catch (error) {
     console.error('Update profile error:', error);
-    
+
     if (error.code === 11000) {
       return res.status(400).json({ message: 'Email address is already in use' });
     }
-    
+
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -235,22 +241,22 @@ router.post('/change-password', auth, [
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user._id;
-    
+
     // Get user with password
     const user = await User.findById(userId).select('+password');
-    
+
     // Verify current password
     const isCurrentPasswordMatch = await user.matchPassword(currentPassword);
     if (!isCurrentPasswordMatch) {
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
-    
+
     // Update password
     user.password = newPassword;
     await user.save();
-    
+
     res.json({ message: 'Password changed successfully' });
-    
+
   } catch (error) {
     console.error('Change password error:', error);
     res.status(500).json({ message: 'Server error' });

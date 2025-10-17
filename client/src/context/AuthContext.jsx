@@ -54,47 +54,59 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = async (email, password) => {
-    try {
-      const response = await authService.login(email, password);
-
-      if (response.token && response.user) {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        setUser(response.user);
-        setIsAuthenticated(true);
-        toast.success('Login successful!');
-        return { success: true };
-      }
-
-      toast.error('Login failed: Invalid response from server');
-      return { success: false };
-    } catch (error) {
-      console.error('Login error:', error);
-      const message = error.response?.data?.message || 'Login failed. Please try again.';
-      toast.error(message);
-      return { success: false, error: message };
-    }
-  };
-
   const register = async (email, password, confirmPassword) => {
     try {
       const response = await authService.register(email, password, confirmPassword);
 
-      if (response.token && response.user) {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        setUser(response.user);
+      console.log('Register context response:', response); // Debug log
+
+      const token = response.token || response.data?.token;
+      const userData = response.user || response.data?.user;
+
+      if (token && userData) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
         setIsAuthenticated(true);
         toast.success('Registration successful!');
         return { success: true };
       }
 
+      console.error('Invalid response format:', response);
       toast.error('Registration failed: Invalid response from server');
       return { success: false };
     } catch (error) {
       console.error('Registration error:', error);
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      const message = error.response?.data?.message || error.message || 'Registration failed. Please try again.';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  const login = async (email, password) => {
+    try {
+      const response = await authService.login(email, password);
+
+      console.log('Login context response:', response); // Debug log
+
+      const token = response.token || response.data?.token;
+      const userData = response.user || response.data?.user;
+
+      if (token && userData) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+        setIsAuthenticated(true);
+        toast.success('Login successful!');
+        return { success: true };
+      }
+
+      console.error('Invalid response format:', response);
+      toast.error('Login failed: Invalid response from server');
+      return { success: false };
+    } catch (error) {
+      console.error('Login error:', error);
+      const message = error.response?.data?.message || error.message || 'Login failed. Please try again.';
       toast.error(message);
       return { success: false, error: message };
     }
